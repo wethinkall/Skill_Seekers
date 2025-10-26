@@ -13,23 +13,41 @@ import time
 from pathlib import Path
 from typing import Any
 
-# Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# Import external MCP package
+# NOTE: Directory renamed from 'mcp/' to 'skill_seeker_mcp/' to avoid shadowing the external mcp package
+MCP_AVAILABLE = False
+Server = None
+Tool = None
+TextContent = None
 
 try:
     from mcp.server import Server
     from mcp.types import Tool, TextContent
-except ImportError:
-    print("❌ Error: mcp package not installed")
-    print("Install with: pip install mcp")
-    sys.exit(1)
+    MCP_AVAILABLE = True
+except ImportError as e:
+    if __name__ == "__main__":
+        print("❌ Error: mcp package not installed")
+        print("Install with: pip install mcp")
+        print(f"Import error: {e}")
+        sys.exit(1)
 
 
-# Initialize MCP server
-app = Server("skill-seeker")
+# Initialize MCP server (only if MCP is available)
+app = Server("skill-seeker") if MCP_AVAILABLE and Server is not None else None
 
 # Path to CLI tools
 CLI_DIR = Path(__file__).parent.parent / "cli"
+
+# Helper decorator that works even when app is None
+def safe_decorator(decorator_func):
+    """Returns the decorator if MCP is available, otherwise returns a no-op"""
+    if MCP_AVAILABLE and app is not None:
+        return decorator_func
+    else:
+        # Return a decorator that just returns the function unchanged
+        def noop_decorator(func):
+            return func
+        return noop_decorator
 
 
 def run_subprocess_with_streaming(cmd, timeout=None):
@@ -101,7 +119,7 @@ def run_subprocess_with_streaming(cmd, timeout=None):
         return "", f"Error running subprocess: {str(e)}", 1
 
 
-@app.list_tools()
+@safe_decorator(app.list_tools() if app else lambda: lambda f: f)
 async def list_tools() -> list[Tool]:
     """List available tools"""
     return [
@@ -335,7 +353,7 @@ async def list_tools() -> list[Tool]:
     ]
 
 
-@app.call_tool()
+@safe_decorator(app.call_tool() if app else lambda: lambda f: f)
 async def call_tool(name: str, arguments: Any) -> list[TextContent]:
     """Handle tool calls"""
 
@@ -828,6 +846,10 @@ async def scrape_pdf_tool(args: dict) -> list[TextContent]:
 
 async def main():
     """Run the MCP server"""
+    if not MCP_AVAILABLE or app is None:
+        print("❌ Error: MCP server cannot start - MCP package not available")
+        sys.exit(1)
+
     from mcp.server.stdio import stdio_server
 
     async with stdio_server() as (read_stream, write_stream):
