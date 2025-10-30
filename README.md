@@ -2,34 +2,37 @@
 
 # Skill Seeker
 
-[![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)](https://github.com/yusufkaraaslan/Skill_Seekers/releases/tag/v1.3.0)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/yusufkaraaslan/Skill_Seekers/releases/tag/v2.0.0)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![MCP Integration](https://img.shields.io/badge/MCP-Integrated-blue.svg)](https://modelcontextprotocol.io)
 [![Tested](https://img.shields.io/badge/Tests-299%20Passing-brightgreen.svg)](tests/)
 [![Project Board](https://img.shields.io/badge/Project-Board-purple.svg)](https://github.com/users/yusufkaraaslan/projects/2)
 
-**Automatically convert any documentation website into a Claude AI skill in minutes.**
+**Automatically convert documentation websites, GitHub repositories, and PDFs into Claude AI skills in minutes.**
 
 > 📋 **[View Development Roadmap & Tasks](https://github.com/users/yusufkaraaslan/projects/2)** - 134 tasks across 10 categories, pick any to contribute!
 
 ## What is Skill Seeker?
 
-Skill Seeker is an automated tool that transforms any documentation website into a production-ready [Claude AI skill](https://claude.ai). Instead of manually reading and summarizing documentation, Skill Seeker:
+Skill Seeker is an automated tool that transforms documentation websites, GitHub repositories, and PDF files into production-ready [Claude AI skills](https://www.anthropic.com/news/skills). Instead of manually reading and summarizing documentation, Skill Seeker:
 
-1. **Scrapes** documentation websites automatically
-2. **Organizes** content into categorized reference files
-3. **Enhances** with AI to extract best examples and key concepts
-4. **Packages** everything into an uploadable `.zip` file for Claude
+1. **Scrapes** multiple sources (docs, GitHub repos, PDFs) automatically
+2. **Analyzes** code repositories with deep AST parsing
+3. **Detects** conflicts between documentation and code implementation
+4. **Organizes** content into categorized reference files
+5. **Enhances** with AI to extract best examples and key concepts
+6. **Packages** everything into an uploadable `.zip` file for Claude
 
 **Result:** Get comprehensive Claude skills for any framework, API, or tool in 20-40 minutes instead of hours of manual work.
 
 ## Why Use This?
 
-- 🎯 **For Developers**: Quickly create Claude skills for your favorite frameworks (React, Vue, Django, etc.)
-- 🎮 **For Game Devs**: Generate skills for game engines (Godot, Unity documentation, etc.)
-- 🔧 **For Teams**: Create internal documentation skills for your company's APIs
-- 📚 **For Learners**: Build comprehensive reference skills for technologies you're learning
+- 🎯 **For Developers**: Create skills from documentation + GitHub repos with conflict detection
+- 🎮 **For Game Devs**: Generate skills for game engines (Godot docs + GitHub, Unity, etc.)
+- 🔧 **For Teams**: Combine internal docs + code repositories into single source of truth
+- 📚 **For Learners**: Build comprehensive skills from docs, code examples, and PDFs
+- 🔍 **For Open Source**: Analyze repos to find documentation gaps and outdated examples
 
 ## Key Features
 
@@ -47,6 +50,24 @@ Skill Seeker is an automated tool that transforms any documentation website into
 - ✅ **Table Extraction** - Extract complex tables from PDFs
 - ✅ **Parallel Processing** - 3x faster for large PDFs
 - ✅ **Intelligent Caching** - 50% faster on re-runs
+
+### 🐙 GitHub Repository Scraping (**v2.0.0**)
+- ✅ **Deep Code Analysis** - AST parsing for Python, JavaScript, TypeScript, Java, C++, Go
+- ✅ **API Extraction** - Functions, classes, methods with parameters and types
+- ✅ **Repository Metadata** - README, file tree, language breakdown, stars/forks
+- ✅ **GitHub Issues & PRs** - Fetch open/closed issues with labels and milestones
+- ✅ **CHANGELOG & Releases** - Automatically extract version history
+- ✅ **Conflict Detection** - Compare documented APIs vs actual code implementation
+- ✅ **MCP Integration** - Natural language: "Scrape GitHub repo facebook/react"
+
+### 🔄 Unified Multi-Source Scraping (**NEW - v2.0.0**)
+- ✅ **Combine Multiple Sources** - Mix documentation + GitHub + PDF in one skill
+- ✅ **Conflict Detection** - Automatically finds discrepancies between docs and code
+- ✅ **Intelligent Merging** - Rule-based or AI-powered conflict resolution
+- ✅ **Transparent Reporting** - Side-by-side comparison with ⚠️ warnings
+- ✅ **Documentation Gap Analysis** - Identifies outdated docs and undocumented features
+- ✅ **Single Source of Truth** - One skill showing both intent (docs) and reality (code)
+- ✅ **Backward Compatible** - Legacy single-source configs still work
 
 ### 🤖 AI & Enhancement
 - ✅ **AI-Powered Enhancement** - Transforms basic templates into comprehensive guides
@@ -125,6 +146,122 @@ python3 cli/pdf_scraper.py --pdf docs/encrypted.pdf --name myskill --password my
 - ✅ Table extraction
 - ✅ Parallel processing (3x faster)
 - ✅ Intelligent caching
+
+### Option 4: Use CLI for GitHub Repository
+
+```bash
+# Install GitHub support
+pip3 install PyGithub
+
+# Basic repository scraping
+python3 cli/github_scraper.py --repo facebook/react
+
+# Using a config file
+python3 cli/github_scraper.py --config configs/react_github.json
+
+# With authentication (higher rate limits)
+export GITHUB_TOKEN=ghp_your_token_here
+python3 cli/github_scraper.py --repo facebook/react
+
+# Customize what to include
+python3 cli/github_scraper.py --repo django/django \
+    --include-issues \        # Extract GitHub Issues
+    --max-issues 100 \        # Limit issue count
+    --include-changelog \     # Extract CHANGELOG.md
+    --include-releases        # Extract GitHub Releases
+
+# MCP usage in Claude Code
+"Scrape GitHub repository facebook/react"
+
+# Upload output/react.zip to Claude - Done!
+```
+
+**Time:** ~5-10 minutes | **Quality:** Production-ready | **Cost:** Free
+
+**What Gets Extracted:**
+- ✅ README.md and documentation files
+- ✅ GitHub Issues (open/closed, labels, milestones)
+- ✅ CHANGELOG.md and version history
+- ✅ GitHub Releases with release notes
+- ✅ Repository metadata (stars, language, topics)
+- ✅ File structure and language breakdown
+
+### Option 5: Unified Multi-Source Scraping (**NEW - v2.0.0**)
+
+**The Problem:** Documentation and code often drift apart. Docs might be outdated, missing features that exist in code, or documenting features that were removed.
+
+**The Solution:** Combine documentation + GitHub + PDF into one unified skill that shows BOTH what's documented AND what actually exists, with clear warnings about discrepancies.
+
+```bash
+# Create unified config (mix documentation + GitHub)
+cat > configs/myframework_unified.json << 'EOF'
+{
+  "name": "myframework",
+  "description": "Complete framework knowledge from docs + code",
+  "merge_mode": "rule-based",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://docs.myframework.com/",
+      "extract_api": true,
+      "max_pages": 200
+    },
+    {
+      "type": "github",
+      "repo": "owner/myframework",
+      "include_code": true,
+      "code_analysis_depth": "surface"
+    }
+  ]
+}
+EOF
+
+# Run unified scraper
+python3 cli/unified_scraper.py --config configs/myframework_unified.json
+
+# Upload output/myframework.zip to Claude - Done!
+```
+
+**Time:** ~30-45 minutes | **Quality:** Production-ready with conflict detection | **Cost:** Free
+
+**What Makes It Special:**
+
+✅ **Conflict Detection** - Automatically finds 4 types of discrepancies:
+- 🔴 **Missing in code** (high): Documented but not implemented
+- 🟡 **Missing in docs** (medium): Implemented but not documented
+- ⚠️ **Signature mismatch**: Different parameters/types
+- ℹ️ **Description mismatch**: Different explanations
+
+✅ **Transparent Reporting** - Shows both versions side-by-side:
+```markdown
+#### `move_local_x(delta: float)`
+
+⚠️ **Conflict**: Documentation signature differs from implementation
+
+**Documentation says:**
+```
+def move_local_x(delta: float)
+```
+
+**Code implementation:**
+```python
+def move_local_x(delta: float, snap: bool = False) -> None
+```
+```
+
+✅ **Advantages:**
+- **Identifies documentation gaps** - Find outdated or missing docs automatically
+- **Catches code changes** - Know when APIs change without docs being updated
+- **Single source of truth** - One skill showing intent (docs) AND reality (code)
+- **Actionable insights** - Get suggestions for fixing each conflict
+- **Development aid** - See what's actually in the codebase vs what's documented
+
+**Example Unified Configs:**
+- `configs/react_unified.json` - React docs + GitHub repo
+- `configs/django_unified.json` - Django docs + GitHub repo
+- `configs/fastapi_unified.json` - FastAPI docs + GitHub repo
+
+**Full Guide:** See [docs/UNIFIED_SCRAPING.md](docs/UNIFIED_SCRAPING.md) for complete documentation.
 
 ## How It Works
 
