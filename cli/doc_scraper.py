@@ -197,6 +197,170 @@ class DocToSkillConverter:
             except Exception as e:
                 logger.warning("⚠️  Failed to clear checkpoint: %s", e)
 
+    def extract_nextjs_content(self, soup: Any, url: str) -> Dict[str, Any]:
+        """Extract content from Next.js __NEXT_DATA__ script tag.
+
+        Args:
+            soup: BeautifulSoup parsed HTML
+            url: Page URL
+
+        Returns:
+            dict: Page data or None if Next.js data not found
+        """
+        import json
+        import re
+
+        try:
+            # Find __NEXT_DATA__ script tag
+            next_data_elem = soup.find('script', {'id': '__NEXT_DATA__'})
+            if not next_data_elem or not next_data_elem.string:
+                return None
+
+            # Parse JSON data
+            next_data = json.loads(next_data_elem.string)
+
+            # Navigate to page props
+            if 'props' not in next_data or 'pageProps' not in next_data['props']:
+                return None
+
+            page_props = next_data['props']['pageProps']
+
+            # Extract content from 'post' object
+            if 'post' not in page_props:
+                return None
+
+            post = page_props['post']
+
+            # Initialize page data
+            page = {
+                'url': url,
+                'title': post.get('title', ''),
+                'content': '',
+                'headings': [],
+                'code_samples': [],
+                'patterns': [],
+                'links': []
+            }
+
+            # Extract markdown/HTML content
+            body = post.get('body', {})
+            if isinstance(body, dict) and 'raw' in body:
+                raw_content = body['raw']
+            elif isinstance(body, str):
+                raw_content = body
+            else:
+                return None
+
+            # Parse markdown to extract headings and code blocks
+            lines = raw_content.split('\n')
+            current_heading = None
+            in_code_block = False
+            code_lang = None
+            code_buffer = []
+            content_paragraphs = []
+
+            for line in lines:
+                # Detect code blocks (```language)
+                code_match = re.match(r'^```(\w+)?', line)
+                if code_match:
+                    if in_code_block:
+                        # End of code block
+                        if code_buffer:
+                            page['code_samples'].append({
+                                'code': '\n'.join(code_buffer),
+                                'language': code_lang or 'text'
+                            })
+                        code_buffer = []
+                        code_lang = None
+                        in_code_block = False
+                    else:
+                        # Start of code block
+                        code_lang = code_match.group(1)
+                        in_code_block = True
+                    continue
+
+                if in_code_block:
+                    code_buffer.append(line)
+                    continue
+
+                # Detect headings (# Heading)
+                heading_match = re.match(r'^(#{1,6})\s+(.+)$', line)
+                if heading_match:
+                    level = len(heading_match.group(1))
+                    text = heading_match.group(2).strip()
+                    page['headings'].append({
+                        'level': f'h{level}',
+                        'text': text,
+                        'id': re.sub(r'[^\w-]', '-', text.lower())
+                    })
+                    current_heading = text
+                    continue
+
+                # Regular content
+                if line.strip():
+                    content_paragraphs.append(line.strip())
+
+            # Join content
+            page['content'] = '\n\n'.join(content_paragraphs)
+
+            # Extract patterns from code samples
+            page['patterns'] = self.extract_patterns_from_markdown(raw_content, page['code_samples'])
+
+            # Extract internal links from markdown
+            link_pattern = r'\[([^\]]+)\]\((/docs/[^\)]+)\)'
+            for match in re.finditer(link_pattern, raw_content):
+                link_path = match.group(2)
+                full_url = urljoin(url, link_path)
+                # Strip anchor
+                full_url = full_url.split('#')[0]
+                if self.is_valid_url(full_url) and full_url not in page['links']:
+                    page['links'].append(full_url)
+
+            logger.info("  ✓ Next.js content extracted: %s", page['title'])
+            return page
+
+        except Exception as e:
+            logger.debug("  ⚠ Next.js extraction failed for %s: %s", url, e)
+            return None
+
+    def extract_patterns_from_markdown(self, markdown: str, code_samples: List[Dict]) -> List[Dict]:
+        """Extract common patterns from markdown content.
+
+        Args:
+            markdown: Raw markdown text
+            code_samples: List of code samples
+
+        Returns:
+            list: List of pattern dicts
+        """
+        patterns = []
+        lines = markdown.split('\n')
+
+        for i, line in enumerate(lines):
+            # Look for pattern markers
+            if any(marker in line.lower() for marker in ['example:', 'pattern:', 'usage:', 'sample:']):
+                # Find next code block
+                for j in range(i + 1, min(i + 10, len(lines))):
+                    if lines[j].startswith('```'):
+                        # Extract code until closing ```
+                        code_lines = []
+                        lang = lines[j][3:].strip()
+                        for k in range(j + 1, len(lines)):
+                            if lines[k].startswith('```'):
+                                break
+                            code_lines.append(lines[k])
+
+                        if code_lines:
+                            patterns.append({
+                                'description': line.strip(),
+                                'code': '\n'.join(code_lines),
+                                'language': lang or 'text'
+                            })
+                            break
+
+        # Limit to top 5 patterns
+        return patterns[:5]
+
     def extract_content(self, soup: Any, url: str) -> Dict[str, Any]:
         """Extract content with improved code and pattern detection"""
         page = {
@@ -208,18 +372,24 @@ class DocToSkillConverter:
             'patterns': [],  # NEW: Extract common patterns
             'links': []
         }
-        
+
+        # Check if Next.js mode is enabled
+        if self.config.get('nextjs_mode', False):
+            nextjs_data = self.extract_nextjs_content(soup, url)
+            if nextjs_data:
+                return nextjs_data
+
         selectors = self.config.get('selectors', {})
-        
+
         # Extract title
         title_elem = soup.select_one(selectors.get('title', 'title'))
         if title_elem:
             page['title'] = self.clean_text(title_elem.get_text())
-        
+
         # Find main content
         main_selector = selectors.get('main_content', 'div[role="main"]')
         main = soup.select_one(main_selector)
-        
+
         if not main:
             logger.warning("⚠ No content: %s", url)
             return page

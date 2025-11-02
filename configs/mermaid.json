@@ -1,0 +1,39 @@
+{
+  "name": "mermaid",
+  "description": "Mermaid diagram syntax and examples documentation",
+  "base_url": "https://mermaid.js.org/",
+  "selectors": {
+    "main_content": "main",
+    "title": "h1",
+    "code_blocks": "pre, code"
+  },
+  "url_patterns": {
+    "include": [
+      "/intro/",
+      "/syntax/",
+      "/config/",
+      "/ecosystem/",
+      "/community/",
+      "/news/"
+    ],
+    "exclude": [
+      "/search",
+      "/account",
+      "/purchase",
+      ".jpg",
+      ".png",
+      ".gif",
+      ".svg"
+    ]
+  },
+  "categories": {
+    "introduction": ["intro", "getting-started", "about", "overview"],
+    "diagram_types": ["flowchart", "sequence", "class", "state", "entity", "user-journey", "gantt", "pie", "chart", "quadrant", "requirement", "gitgraph", "c4", "mindmap", "timeline", "zenuml", "sankey", "xy", "block", "packet", "kanban", "architecture", "radar", "treemap"],
+    "syntax": ["syntax", "diagram", "example", "reference"],
+    "configuration": ["config", "configuration", "theming", "theme", "setup", "api", "deployment"],
+    "integration": ["ecosystem", "integration", "community", "tutorial", "plugins"],
+    "advanced": ["advanced", "custom", "extension", "development"]
+  },
+  "rate_limit": 0.5,
+  "max_pages": 150
+}

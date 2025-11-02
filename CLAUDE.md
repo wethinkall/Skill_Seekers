@@ -596,6 +596,22 @@ python3 /mnt/skills/examples/skill-creator/scripts/cli/package_skill.py output/g
 
 The correct command uses the local `cli/package_skill.py` in the repository root.
 
+### Skill Packaging & Upload Errors
+
+**Critical:** For detailed error analysis and solutions from actual Skill generation attempts, see **[AGENTS.md](AGENTS.md)** which documents:
+- YAML frontmatter requirements and common mistakes
+- Skill name format validation (lowercase + hyphens only)
+- JavaScript-heavy website scraping limitations
+- Solutions for each error type encountered
+
+**Key Takeaways from AGENTS.md:**
+1. **Frontmatter is mandatory** - Must start with `---`, contain `name` and `description`
+2. **Skill names must be lowercase-hyphenated** - Format: `^[a-z0-9-]+$` (no spaces, no uppercase)
+3. **JavaScript sites need special handling** - VitePress/Next.js sites require Puppeteer/Playwright or manual documentation
+4. **Pre-upload validation checklist** - 4 key verification points before packaging
+
+Refer to AGENTS.md when debugging Skill packaging issues.
+
 ## Key Code Locations
 
 - **URL validation**: `is_valid_url()` doc_scraper.py:49-64
@@ -677,6 +693,7 @@ The correct command uses the local `cli/package_skill.py` in the repository root
 - **[README.md](README.md)** - Complete user documentation
 - **[BULLETPROOF_QUICKSTART.md](BULLETPROOF_QUICKSTART.md)** - Complete beginner guide **NEW!**
 - **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Comprehensive troubleshooting **NEW!**
+- **[AGENTS.md](AGENTS.md)** - Error analysis & solutions from actual Skill generation attempts **NEW!**
 - **[QUICKSTART.md](QUICKSTART.md)** - Get started in 3 steps
 - **[docs/CLAUDE.md](docs/CLAUDE.md)** - Detailed technical architecture
 - **[docs/ENHANCEMENT.md](docs/ENHANCEMENT.md)** - AI enhancement guide

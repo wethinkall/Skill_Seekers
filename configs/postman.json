@@ -1,0 +1,34 @@
+{
+  "name": "postman",
+  "description": "Use this skill when working with Postman API platform, API testing, REST clients, API documentation, collections, or API development workflows",
+  "base_url": "https://learning.postman.com/docs/introduction/overview/",
+  "selectors": {
+    "main_content": "article",
+    "title": "title",
+    "code_blocks": "pre"
+  },
+  "url_patterns": {
+    "include": ["/docs/"],
+    "exclude": ["/search", "/changelog", "/_next/"]
+  },
+  "categories": {
+    "getting_started": ["getting-started", "introduction", "first"],
+    "sending_requests": ["sending-requests", "requests", "http"],
+    "tests_and_scripts": ["tests-and-scripts", "test", "script"],
+    "collections": ["collections", "collection"],
+    "flows": ["postman-flows", "flows", "flow"],
+    "api_design": ["design-apis", "design", "schema"],
+    "integrations": ["integrations", "integration"],
+    "administration": ["administration", "admin", "team"],
+    "insights": ["insights", "analytics", "reports"],
+    "collaboration": ["collaborating-in-postman", "collaboration"],
+    "developer": ["developer", "api-client"],
+    "api_network": ["postman-api-network", "public-api"],
+    "ai_tools": ["postman-ai-developer-tools", "ai"],
+    "publishing": ["publishing-your-api", "publish"],
+    "governance": ["api-governance", "governance"]
+  },
+  "rate_limit": 0.3,
+  "max_pages": 629,
+  "nextjs_mode": true
+}

@@ -1,0 +1,85 @@
+{
+  "name": "crewai",
+  "description": "Build collaborative AI agent systems with CrewAI - a Python framework for creating autonomous agents that work together in crews",
+  "base_url": "https://docs.crewai.com/",
+  "selectors": {
+    "main_content": "main",
+    "title": "h1, title",
+    "code_blocks": "pre, code"
+  },
+  "url_patterns": {
+    "include": [
+      "/en/introduction",
+      "/en/concepts",
+      "/en/core-concepts",
+      "/en/how-to-guides",
+      "/en/tools",
+      "/en/examples",
+      "/en/api-reference"
+    ],
+    "exclude": [
+      "/search",
+      "/account",
+      "/purchase",
+      "/enterprise",
+      "/amp",
+      ".jpg",
+      ".png",
+      ".gif",
+      ".svg"
+    ]
+  },
+  "categories": {
+    "introduction": [
+      "introduction",
+      "getting-started",
+      "quickstart",
+      "overview",
+      "welcome"
+    ],
+    "core_concepts": [
+      "concepts",
+      "core-concepts",
+      "agents",
+      "tasks",
+      "crews",
+      "tools",
+      "llm"
+    ],
+    "agents": [
+      "agent",
+      "agents",
+      "creating-agents",
+      "agent-architecture",
+      "advanced-agents"
+    ],
+    "tasks": [
+      "task",
+      "tasks",
+      "creating-tasks",
+      "task-execution"
+    ],
+    "tools": [
+      "tool",
+      "tools",
+      "built-in-tools",
+      "custom-tools",
+      "tool-integration"
+    ],
+    "examples": [
+      "example",
+      "examples",
+      "use-cases",
+      "tutorial"
+    ],
+    "api_reference": [
+      "api",
+      "api-reference",
+      "reference",
+      "class",
+      "method"
+    ]
+  },
+  "rate_limit": 0.5,
+  "max_pages": 100
+}

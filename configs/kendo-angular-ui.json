@@ -1,0 +1,38 @@
+{
+  "name": "kendo-angular-ui",
+  "description": "KendoUI for Angular component library and documentation",
+  "base_url": "https://www.telerik.com/kendo-angular-ui/components/",
+  "selectors": {
+    "main_content": "main",
+    "title": "h1",
+    "code_blocks": "pre, code"
+  },
+  "url_patterns": {
+    "include": [
+      "/components/",
+      "/kendo-angular-ui/"
+    ],
+    "exclude": [
+      "/purchase",
+      "/pricing",
+      "/contact",
+      "/account",
+      "/search",
+      "/api-reference",
+      ".jpg",
+      ".png",
+      ".gif"
+    ]
+  },
+  "categories": {
+    "getting_started": ["getting-started", "installation", "setup", "introduction", "quickstart"],
+    "components": ["button", "grid", "datepicker", "chart", "form", "input", "select", "combobox", "autocomplete", "toolbar", "menu", "dialog", "tooltip", "popover", "splitter", "dockmanager", "drawer"],
+    "layout": ["layout", "responsive", "grid", "flexbox", "container"],
+    "styling": ["themes", "styling", "css", "theming", "colors", "design"],
+    "data": ["datasource", "data-binding", "binding", "api", "remote"],
+    "forms": ["forms", "validation", "input", "textbox", "checkbox", "radio"],
+    "advanced": ["advanced", "custom", "template", "directive", "module", "configuration"]
+  },
+  "rate_limit": 0.5,
+  "max_pages": 200
+}

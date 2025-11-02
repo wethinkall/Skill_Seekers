@@ -1,0 +1,69 @@
+{
+  "name": "chatwoot",
+  "description": "Open-source customer engagement platform for managing conversations across multiple channels including live chat, email, and social media",
+  "base_url": "https://www.chatwoot.com/hc/user-guide/en",
+  "selectors": {
+    "main_content": "main, article, .main-content",
+    "title": "h1, title",
+    "code_blocks": "pre, code"
+  },
+  "url_patterns": {
+    "include": [
+      "/hc/user-guide/en"
+    ],
+    "exclude": [
+      "/search",
+      "/account",
+      ".jpg",
+      ".png",
+      ".gif",
+      ".svg"
+    ]
+  },
+  "categories": {
+    "getting_started": [
+      "getting-started",
+      "introduction",
+      "setup",
+      "installation",
+      "quickstart"
+    ],
+    "conversations": [
+      "conversation",
+      "chat",
+      "messaging",
+      "inbox"
+    ],
+    "contacts": [
+      "contact",
+      "customer",
+      "user"
+    ],
+    "channels": [
+      "channel",
+      "integration",
+      "whatsapp",
+      "email",
+      "facebook"
+    ],
+    "automation": [
+      "automation",
+      "workflow",
+      "bot",
+      "macro"
+    ],
+    "reports": [
+      "report",
+      "analytics",
+      "dashboard",
+      "metrics"
+    ],
+    "settings": [
+      "setting",
+      "configuration",
+      "admin"
+    ]
+  },
+  "rate_limit": 0.5,
+  "max_pages": 150
+}
