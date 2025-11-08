@@ -427,15 +427,16 @@ class DocToSkillConverter:
                 paragraphs.append(text)
         
         page['content'] = '\n\n'.join(paragraphs)
-        
-        # Extract links
-        for link in main.find_all('a', href=True):
+
+        # Extract links from entire page (not just main content)
+        # This allows discovery of navigation links outside the main content area
+        for link in soup.find_all('a', href=True):
             href = urljoin(url, link['href'])
             # Strip anchor fragments to avoid treating #anchors as separate pages
             href = href.split('#')[0]
             if self.is_valid_url(href) and href not in page['links']:
                 page['links'].append(href)
-        
+
         return page
 
     def _extract_language_from_classes(self, classes):
@@ -504,6 +505,13 @@ class DocToSkillConverter:
             return 'python'
         if '#include' in code or 'int main' in code:
             return 'cpp'
+        # C# detection
+        if 'using System' in code or 'namespace ' in code:
+            return 'csharp'
+        if '{ get; set; }' in code:
+            return 'csharp'
+        if any(keyword in code for keyword in ['public class ', 'private class ', 'internal class ', 'public static void ']):
+            return 'csharp'
 
         return 'unknown'
     
@@ -1811,11 +1819,14 @@ def execute_scraping_and_building(config: Dict[str, Any], args: argparse.Namespa
     # Check for existing data
     exists, page_count = check_existing_data(config['name'])
 
-    if exists and not args.skip_scrape:
+    if exists and not args.skip_scrape and not args.fresh:
         logger.info("\n✓ Found existing data: %d pages", page_count)
         response = input("Use existing data? (y/n): ").strip().lower()
         if response == 'y':
             args.skip_scrape = True
+    elif exists and args.fresh:
+        logger.info("\n✓ Found existing data: %d pages", page_count)
+        logger.info("  --fresh flag set, will re-scrape from scratch")
 
     # Create converter
     converter = DocToSkillConverter(config, resume=args.resume)
