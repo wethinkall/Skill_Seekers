@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 🎯 Current Status (October 26, 2025)
+## 🎯 Current Status (November 6, 2025)
 
 **Version:** v2.0.0 (Production Ready - Major Feature Release)
 **Active Development:** Flexible, incremental task-based approach
@@ -14,10 +14,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **NEW**: Automatic conflict detection between docs and code
 - **NEW**: Rule-based and AI-powered merging
 - **NEW**: Transparent conflict reporting with side-by-side comparison
-- **NEW**: 4 example unified configs (React, Django, FastAPI, Godot)
+- **NEW**: 5 example unified configs (React, Django, FastAPI, Godot, FastAPI-test)
 - **NEW**: Complete documentation in docs/UNIFIED_SCRAPING.md
-- **NEW**: Integration tests (6/6 passing)
-- **Status**: ✅ Production ready and fully tested
+- **NEW**: Integration tests added (378/390 tests passing, 12 unified tests need fixes)
+- **Status**: ⚠️ Core functionality stable, unified tests need attention
 
 **✅ Community Response (H1 Group):**
 - **Issue #8 Fixed** - Added BULLETPROOF_QUICKSTART.md and TROUBLESHOOTING.md for beginners
@@ -27,11 +27,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **MCP Setup Fixed** - Path expansion bug resolved in setup_mcp.sh
 
 **📦 Configs Status:**
-- ✅ **15/15 production configs verified working** (100% success rate)
-- ✅ 4 new unified configs added (React, Django, FastAPI, Godot)
-- ✅ All selectors tested and validated
+- ✅ **24 total configs available** (including unified configs)
+- ✅ 5 unified configs added (React, Django, FastAPI, Godot, FastAPI-test)
+- ✅ Core selectors tested and validated
+- 📝 Single-source configs: ansible-core, astro, claude-code, django, fastapi, godot, godot-large-example, hono, kubernetes, laravel, react, steam-economy-complete, tailwind, vue
+- 📝 Multi-source configs: django_unified, fastapi_unified, fastapi_unified_test, godot_unified, react_unified
+- 📝 Test/Example configs: godot_github, react_github, python-tutorial-test, example_pdf, test-manual
 
 **📋 Next Up:**
+- **Priority**: Fix 12 failing unified tests in tests/test_unified.py
+  - ConfigValidator expecting dict instead of file path
+  - ConflictDetector expecting dict pages, not list
 - Task H1.3 - Create example project folder
 - Task A3.1 - GitHub Pages site (skillseekersweb.com)
 - Task J1.1 - Install MCP package for testing
@@ -290,7 +296,7 @@ Skill_Seekers/
 ├── cli/enhance_skill.py            # AI enhancement (API-based)
 ├── cli/enhance_skill_local.py      # AI enhancement (LOCAL, no API)
 ├── cli/package_skill.py            # Skill packager
-├── cli/run_tests.py                # Test runner (71 tests)
+├── cli/run_tests.py                # Test runner (390 tests, 378 passing)
 ├── configs/                    # Preset configurations
 │   ├── godot.json
 │   ├── react.json
@@ -662,7 +668,9 @@ Refer to AGENTS.md when debugging Skill packaging issues.
 | Enhancement (API) | 20-40 sec | Requires API key |
 | Packaging | 5-10 sec | Final zip |
 
-## Available Production Configs (12 Total - All Verified Working)
+## Available Configs (24 Total)
+
+### Single-Source Documentation Configs (14 configs)
 
 **Web Frameworks:**
 - ✅ `react.json` - React (article selector, 7,102 chars)
@@ -671,9 +679,10 @@ Refer to AGENTS.md when debugging Skill packaging issues.
 - ✅ `django.json` - Django (article selector, 6,468 chars)
 - ✅ `laravel.json` - Laravel 9.x (#main-content selector, 16,131 chars)
 - ✅ `fastapi.json` - FastAPI (article selector, 11,906 chars)
+- ✅ `hono.json` - Hono web framework **NEW!**
 
 **DevOps & Automation:**
-- ✅ `ansible-core.json` - Ansible Core 2.19 (div[role='main'] selector, ~32K chars) **NEW!**
+- ✅ `ansible-core.json` - Ansible Core 2.19 (div[role='main'] selector, ~32K chars)
 - ✅ `kubernetes.json` - Kubernetes (main selector, 2,100 chars)
 
 **Game Engines:**
@@ -686,7 +695,25 @@ Refer to AGENTS.md when debugging Skill packaging issues.
 **Gaming:**
 - ✅ `steam-economy-complete.json` - Steam Economy (div.documentation_bbcode, 588 chars)
 
-**All configs tested and verified as of October 22, 2025**
+**Development Tools:**
+- ✅ `claude-code.json` - Claude Code documentation **NEW!**
+
+### Unified Multi-Source Configs (5 configs - **NEW v2.0!**)
+- ⚠️ `react_unified.json` - React (docs + GitHub + code analysis)
+- ⚠️ `django_unified.json` - Django (docs + GitHub + code analysis)
+- ⚠️ `fastapi_unified.json` - FastAPI (docs + GitHub + code analysis)
+- ⚠️ `fastapi_unified_test.json` - FastAPI test config
+- ⚠️ `godot_unified.json` - Godot (docs + GitHub + code analysis)
+
+### Test/Example Configs (5 configs)
+- 📝 `godot_github.json` - GitHub-only scraping example
+- 📝 `react_github.json` - GitHub-only scraping example
+- 📝 `python-tutorial-test.json` - Python tutorial test
+- 📝 `example_pdf.json` - PDF extraction example
+- 📝 `test-manual.json` - Manual testing config
+
+**Note:** ⚠️ = Unified configs have 12 failing tests that need fixing
+**Last verified:** November 6, 2025
 
 ## Additional Documentation
 
