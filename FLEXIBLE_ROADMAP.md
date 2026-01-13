@@ -4,14 +4,21 @@
 
 ---
 
-## 🎯 Current Status: v1.0.0 Released ✅
+## 🎯 Current Status: v2.1.0 Released ✅
+
+**Latest Release:** v2.1.0 (November 29, 2025)
 
 **What Works:**
 - ✅ Documentation scraping (HTML websites)
+- ✅ GitHub repository scraping with unlimited local analysis
+- ✅ PDF extraction and conversion
+- ✅ Unified multi-source scraping (docs + GitHub + PDF)
 - ✅ 9 MCP tools fully functional
 - ✅ Auto-upload to Claude
-- ✅ 12 preset configs
+- ✅ 24 preset configs (including 5 unified configs)
 - ✅ Large docs support (40K+ pages)
+- ✅ Configurable directory exclusions
+- ✅ 427 tests passing
 
 ---
 
@@ -21,14 +28,51 @@
 Small tasks that build community features incrementally
 
 #### A1: Config Sharing (Website Feature)
-- [ ] **Task A1.1:** Create simple JSON API endpoint to list configs
-- [ ] **Task A1.2:** Add MCP tool `fetch_config` to download from website
-- [ ] **Task A1.3:** Create basic config upload form (HTML + backend)
-- [ ] **Task A1.4:** Add config rating/voting system
-- [ ] **Task A1.5:** Add config search/filter functionality
-- [ ] **Task A1.6:** Add user-submitted config review queue
+- [x] **Task A1.1:** Create simple JSON API endpoint to list configs ✅ **COMPLETE** (Issue #9)
+  - **Status:** Live at https://api.skillseekersweb.com
+  - **Features:** 6 REST endpoints, auto-categorization, auto-tags, filtering, SSL enabled
+  - **Branch:** `feature/a1-config-sharing`
+  - **Deployment:** Render with custom domain
+- [x] **Task A1.2:** Add MCP tool `fetch_config` to download from website ✅ **COMPLETE**
+  - **Status:** Implemented in MCP server
+  - **Features:** List 24 configs, filter by category, download by name, save to local directory
+  - **Commands:** `list_available=true`, `category='web-frameworks'`, `config_name='react'`
+  - **Branch:** `feature/a1-config-sharing`
+- [ ] **Task A1.3:** Add MCP tool `submit_config` to submit custom configs (Issue #11)
+  - **Purpose:** Allow users to submit custom configs via MCP (creates GitHub issue)
+  - **Features:** Validate config JSON, create GitHub issue, auto-label, return issue URL
+  - **Approach:** GitHub Issues backend (safe, uses GitHub auth/spam detection)
+  - **Time:** 2-3 hours
+- [ ] **Task A1.4:** Create static config catalog website (GitHub Pages) (Issue #12)
+  - **Purpose:** Read-only catalog to browse/search configs (like npm registry)
+  - **Features:** Static HTML/JS, pulls from API, search/filter, copy JSON button
+  - **Architecture:** Website = browse, MCP = download/submit/manage
+  - **Time:** 2-3 hours
+- [ ] **Task A1.5:** Add config rating/voting system (Issue #13)
+  - **Purpose:** Community feedback on config quality
+  - **Features:** Star ratings, vote counts, sort by rating, "most popular" section
+  - **Options:** GitHub reactions, backend database, or localStorage
+  - **Time:** 3-4 hours
+- [ ] **Task A1.6:** Admin review queue for submitted configs (Issue #14)
+  - **Purpose:** Review community-submitted configs before publishing
+  - **Approach:** Use GitHub Issues with labels (no custom code needed)
+  - **Workflow:** Review → Validate → Test → Approve/Reject
+  - **Time:** 1-2 hours (GitHub Issues) or 4-6 hours (custom dashboard)
+- [x] **Task A1.7:** Add MCP tool `install_skill` for one-command workflow (Issue #204) ✅ **COMPLETE!**
+  - **Purpose:** Complete one-command workflow: fetch → scrape → **enhance** → package → upload
+  - **Features:** Single command install, smart config detection, automatic AI enhancement (LOCAL)
+  - **Workflow:** fetch_config → scrape_docs → enhance_skill_local → package_skill → upload_skill
+  - **Critical:** Always includes AI enhancement step (30-60 sec, 3/10→9/10 quality boost)
+  - **Time:** 3-4 hours
+  - **Completed:** December 21, 2025 - 10 tools total, 13 tests passing, full automation working
+- [ ] **Task A1.8:** Add smart skill detection and auto-install (Issue #205)
+  - **Purpose:** Auto-detect missing skills from user queries and offer to install them
+  - **Features:** Topic extraction, skill gap analysis, API search, smart suggestions
+  - **Modes:** Ask first (default), Auto-install, Suggest only, Manual
+  - **Example:** User asks about React → Claude detects → Suggests installing React skill
+  - **Time:** 4-6 hours
 
-**Start Small:** Pick A1.1 first (simple JSON endpoint)
+**Start Small:** ~~Pick A1.1 first (simple JSON endpoint)~~ ✅ A1.1 Complete! ~~Pick A1.2 next (MCP tool)~~ ✅ A1.2 Complete! Pick A1.3 next (MCP submit tool)
 
 #### A2: Knowledge Sharing (Website Feature)
 - [ ] **Task A2.1:** Design knowledge database schema
@@ -132,13 +176,37 @@ Generate skills from actual code repositories
 **Start Small:** Pick C2.1 first (simple file walker)
 
 #### C3: Code Pattern Recognition
-- [ ] **Task C3.1:** Detect common patterns (singleton, factory, etc.)
-- [ ] **Task C3.2:** Extract usage examples from test files
+- [x] **Task C3.1:** Detect common patterns (singleton, factory, etc.) ✅ **v2.6.0** - Completed Jan 2026
+  - 10 GoF patterns: Singleton, Factory, Observer, Strategy, Decorator, Builder, Adapter, Command, Template Method, Chain of Responsibility
+  - 9 languages: Python (AST), JavaScript, TypeScript, C++, C, C#, Go, Rust, Java
+  - 3 detection levels: Surface (naming), Deep (structure), Full (behavior)
+  - CLI tool, MCP integration, 24 tests, 87% precision
+  - See: `docs/PATTERN_DETECTION.md`, Issue #71
+- [x] **Task C3.2:** Extract usage examples from test files ✅ **v2.6.0** - Completed Jan 2026
+  - 5 categories: instantiation, method_call, config, setup, workflow
+  - 9 languages: Python (AST-based), JavaScript, TypeScript, Go, Rust, Java, C#, PHP, Ruby
+  - Quality filtering with confidence scoring (removes trivial patterns)
+  - CLI tool, MCP integration, 19 tests, 80%+ high-confidence examples
+  - See: `docs/TEST_EXAMPLE_EXTRACTION.md`, Issue #72
 - [ ] **Task C3.3:** Build "how to" guides from code
 - [ ] **Task C3.4:** Extract configuration patterns
 - [ ] **Task C3.5:** Create architectural overview
+- [x] **Task C3.6:** AI Enhancement for Pattern Detection and Test Examples ✅ **v2.6.0** - Completed Jan 2026
+  - Enhances C3.1 and C3.2 with AI-powered insights using Claude API
+  - Pattern enhancement: Explains detection, suggests improvements, identifies issues
+  - Test example enhancement: Adds context, groups tutorials, identifies best practices
+  - Auto-activation when ANTHROPIC_API_KEY is set, graceful offline degradation
+  - Batch processing (5 items/call) to minimize API costs
+  - See: `src/skill_seekers/cli/ai_enhancer.py`, Issue #234
+- [x] **Task C3.7:** Architectural Pattern Detection ✅ **v2.6.0** - Completed Jan 2026
+  - Detects 8 architectural patterns: MVC, MVVM, MVP, Repository, Service Layer, Layered, Clean Architecture
+  - Framework detection: Django, Flask, Spring, ASP.NET, Rails, Laravel, Angular, React, Vue.js
+  - Multi-file analysis with directory structure pattern matching
+  - Evidence-based detection with confidence scoring
+  - AI-enhanced architectural insights (integrates with C3.6)
+  - See: `src/skill_seekers/cli/architectural_pattern_detector.py`, Issue #235
 
-**Start Small:** Pick C3.1 first (pattern detection research)
+**Start Small:** Pick C3.3 next (build "how to" guides from workflow examples)
 
 ---
 
@@ -186,7 +254,7 @@ Small improvements to existing MCP tools
 - [ ] **Task E2.3:** Add progress indicators for long operations
 - [ ] **Task E2.4:** Add validation for all inputs
 - [ ] **Task E2.5:** Add helpful error messages
-- [ ] **Task E2.6:** Add retry logic for network failures
+- [x] **Task E2.6:** Add retry logic for network failures *(Utilities ready via PR #208, integration pending)*
 
 **Start Small:** Pick E2.1 first (one tool at a time)
 
@@ -200,7 +268,7 @@ Technical improvements to existing features
 - [ ] **Task F1.2:** Add duplicate page detection
 - [ ] **Task F1.3:** Add memory-efficient streaming for large docs
 - [ ] **Task F1.4:** Add HTML parser fallback (lxml → html5lib)
-- [ ] **Task F1.5:** Add network retry with exponential backoff
+- [x] **Task F1.5:** Add network retry with exponential backoff *(Utilities ready via PR #208, scraper integration pending)*
 - [ ] **Task F1.6:** Fix package path output bug
 
 **Start Small:** Pick F1.1 first (URL normalization only)
@@ -302,7 +370,7 @@ Improve test coverage and quality
 5. **F1.1** - Add URL normalization (small code fix)
 
 ### Medium Tasks (3-5 hours each):
-6. **A1.1** - Create JSON API for configs (simple endpoint)
+6. ~~**A1.1** - Create JSON API for configs (simple endpoint)~~ ✅ **COMPLETE**
 7. **G1.1** - Create config validator script
 8. **C1.1** - GitHub API client (basic connection)
 9. **I1.1** - Write Quick Start video script
@@ -318,9 +386,9 @@ Improve test coverage and quality
 
 ## 📊 Progress Tracking
 
-**Completed Tasks:** 0
+**Completed Tasks:** 3 (A1.1 ✅, A1.2 ✅, A1.7 ✅)
 **In Progress:** 0
-**Total Available Tasks:** 100+
+**Total Available Tasks:** 136
 
 ### Current Sprint: Choose Your Own Adventure!
 **Pick 1-3 tasks** from any category that interest you most.

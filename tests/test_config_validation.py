@@ -11,7 +11,7 @@ import unittest
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from cli.doc_scraper import validate_config
+from skill_seekers.cli.doc_scraper import validate_config
 
 
 class TestConfigValidation(unittest.TestCase):
@@ -306,6 +306,30 @@ class TestConfigValidation(unittest.TestCase):
 
         # Should be valid
         self.assertEqual(config.get('llms_txt_url'), 'https://example.com/llms-full.txt')
+
+    def test_config_with_skip_llms_txt(self):
+        """Test config validation accepts skip_llms_txt"""
+        config = {
+            'name': 'test',
+            'base_url': 'https://example.com/docs',
+            'skip_llms_txt': True
+        }
+
+        errors, warnings = validate_config(config)
+        self.assertEqual(errors, [])
+        self.assertTrue(config.get('skip_llms_txt'))
+
+    def test_config_with_skip_llms_txt_false(self):
+        """Test config validation accepts skip_llms_txt as False"""
+        config = {
+            'name': 'test',
+            'base_url': 'https://example.com/docs',
+            'skip_llms_txt': False
+        }
+
+        errors, warnings = validate_config(config)
+        self.assertEqual(errors, [])
+        self.assertFalse(config.get('skip_llms_txt'))
 
 
 if __name__ == '__main__':

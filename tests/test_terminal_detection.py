@@ -14,7 +14,7 @@ from pathlib import Path
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from cli.enhance_skill_local import detect_terminal_app, LocalSkillEnhancer
+from skill_seekers.cli.enhance_skill_local import detect_terminal_app, LocalSkillEnhancer
 
 
 class TestDetectTerminalApp(unittest.TestCase):
@@ -164,9 +164,9 @@ class TestDetectTerminalApp(unittest.TestCase):
             # Mock Popen to prevent actual terminal launch
             mock_popen.return_value = MagicMock()
 
-            # Run enhancer
+            # Run enhancer in interactive mode (not headless)
             enhancer = LocalSkillEnhancer(skill_dir)
-            result = enhancer.run()
+            result = enhancer.run(headless=False)
 
             # Verify Popen was called
             self.assertTrue(mock_popen.called)
@@ -239,7 +239,8 @@ class TestDetectTerminalApp(unittest.TestCase):
             old_stdout = sys.stdout
             sys.stdout = captured_output
 
-            result = enhancer.run()
+            # Run in interactive mode (not headless) to test terminal launch
+            result = enhancer.run(headless=False)
 
             # Restore stdout
             sys.stdout = old_stdout
@@ -279,7 +280,8 @@ class TestDetectTerminalApp(unittest.TestCase):
             # Mock Popen to prevent actual launch
             with patch('subprocess.Popen') as mock_popen:
                 mock_popen.return_value = MagicMock()
-                enhancer.run()
+                # Run in interactive mode (not headless) to test terminal detection
+                enhancer.run(headless=False)
 
             # Restore stdout
             sys.stdout = old_stdout
@@ -298,7 +300,7 @@ class TestTerminalMapCompleteness(unittest.TestCase):
 
     def test_terminal_map_has_all_documented_terminals(self):
         """Verify TERMINAL_MAP contains all terminals mentioned in documentation."""
-        from cli.enhance_skill_local import detect_terminal_app
+        from skill_seekers.cli.enhance_skill_local import detect_terminal_app
 
         # Get the TERMINAL_MAP from the function's scope
         # We need to test this indirectly by checking each known terminal

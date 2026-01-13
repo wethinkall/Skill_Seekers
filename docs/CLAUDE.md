@@ -2,6 +2,106 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🎯 Current Status (January 8, 2026)
+
+**Version:** v2.6.0 (Three-Stream GitHub Architecture - Phases 1-5 Complete!)
+**Active Development:** Phase 6 pending (Documentation & Examples)
+
+### Recent Updates (January 2026):
+
+**🚀 MAJOR RELEASE: Three-Stream GitHub Architecture (v2.6.0)**
+- **✅ Phases 1-5 Complete** (26 hours implementation, 81 tests passing)
+- **NEW: GitHub Three-Stream Fetcher** - Split repos into Code, Docs, Insights streams
+- **NEW: Unified Codebase Analyzer** - Works with GitHub URLs + local paths, C3.x as analysis depth
+- **ENHANCED: Source Merging** - Multi-layer merge with GitHub docs and insights
+- **ENHANCED: Router Generation** - GitHub metadata, README quick start, common issues
+- **CRITICAL FIX: Actual C3.x Integration** - Real pattern detection (not placeholders)
+- **Quality Metrics**: GitHub overhead 20-60 lines, router size 60-250 lines
+- **Documentation**: Complete implementation summary and E2E tests
+
+### Recent Updates (December 2025):
+
+**🎉 MAJOR RELEASE: Multi-Platform Feature Parity! (v2.5.0)**
+- **🌐 Multi-LLM Support**: Full support for 4 platforms - Claude AI, Google Gemini, OpenAI ChatGPT, Generic Markdown
+- **🔄 Complete Feature Parity**: All skill modes work with all platforms
+- **🏗️ Platform Adaptors**: Clean architecture with platform-specific implementations
+- **✨ 18 MCP Tools**: Enhanced with multi-platform support (package, upload, enhance)
+- **📚 Comprehensive Documentation**: Complete guides for all platforms
+- **🧪 Test Coverage**: 700+ tests passing, extensive platform compatibility testing
+
+**🚀 NEW: Three-Stream GitHub Architecture (v2.6.0)**
+- **📊 Three-Stream Fetcher**: Split GitHub repos into Code, Docs, and Insights streams
+- **🔬 Unified Codebase Analyzer**: Works with GitHub URLs and local paths
+- **🎯 Enhanced Router Generation**: GitHub insights + C3.x patterns for better routing
+- **📝 GitHub Issue Integration**: Common problems and solutions in sub-skills
+- **✅ 81 Tests Passing**: Comprehensive E2E validation (0.43 seconds)
+
+## Three-Stream GitHub Architecture
+
+**New in v2.6.0**: GitHub repositories are now analyzed using a three-stream architecture:
+
+**STREAM 1: Code** (for C3.x analysis)
+- Files: `*.py, *.js, *.ts, *.go, *.rs, *.java, etc.`
+- Purpose: Deep code analysis with C3.x components
+- Time: 20-60 minutes
+- Components: Patterns (C3.1), Examples (C3.2), Guides (C3.3), Configs (C3.4), Architecture (C3.7)
+
+**STREAM 2: Documentation** (from repository)
+- Files: `README.md, CONTRIBUTING.md, docs/*.md`
+- Purpose: Quick start guides and official documentation
+- Time: 1-2 minutes
+
+**STREAM 3: GitHub Insights** (metadata & community)
+- Data: Open issues, closed issues, labels, stars, forks
+- Purpose: Real user problems and known solutions
+- Time: 1-2 minutes
+
+### Usage Example
+
+```python
+from skill_seekers.cli.unified_codebase_analyzer import UnifiedCodebaseAnalyzer
+
+# Analyze GitHub repo with three streams
+analyzer = UnifiedCodebaseAnalyzer()
+result = analyzer.analyze(
+    source="https://github.com/facebook/react",
+    depth="c3x",  # or "basic"
+    fetch_github_metadata=True
+)
+
+# Access all three streams
+print(f"Files: {len(result.code_analysis['files'])}")
+print(f"README: {result.github_docs['readme'][:100]}")
+print(f"Stars: {result.github_insights['metadata']['stars']}")
+print(f"C3.x Patterns: {len(result.code_analysis['c3_1_patterns'])}")
+```
+
+### Router Generation with GitHub
+
+```python
+from skill_seekers.cli.generate_router import RouterGenerator
+from skill_seekers.cli.github_fetcher import GitHubThreeStreamFetcher
+
+# Fetch GitHub repo with three streams
+fetcher = GitHubThreeStreamFetcher("https://github.com/jlowin/fastmcp")
+three_streams = fetcher.fetch()
+
+# Generate router with GitHub integration
+generator = RouterGenerator(
+    ['configs/fastmcp-oauth.json', 'configs/fastmcp-async.json'],
+    github_streams=three_streams
+)
+
+# Result includes:
+# - Repository stats (stars, language)
+# - README quick start
+# - Common issues from GitHub
+# - Enhanced routing keywords (GitHub labels with 2x weight)
+skill_md = generator.generate_skill_md()
+```
+
+**See full documentation**: [Three-Stream Implementation Summary](IMPLEMENTATION_SUMMARY_THREE_STREAM.md)
+
 ## Overview
 
 This is a Python-based documentation scraper that converts ANY documentation website into a Claude skill. It's a single-file tool (`doc_scraper.py`) that scrapes documentation, extracts code patterns, detects programming languages, and generates structured skill files ready for use with Claude.
@@ -94,10 +194,46 @@ The LOCAL enhancement option (`--enhance-local` or `enhance_skill_local.py`) ope
 "Package skill at output/react/"
 ```
 
-9 MCP tools available: list_configs, generate_config, validate_config, estimate_pages, scrape_docs, package_skill, upload_skill, split_config, generate_router
+18 MCP tools available with multi-platform support: list_configs, generate_config, validate_config, fetch_config, estimate_pages, scrape_docs, scrape_github, scrape_pdf, package_skill, upload_skill, enhance_skill (NEW), install_skill, split_config, generate_router, add_config_source, list_config_sources, remove_config_source, submit_config
 
 ### Test with limited pages (edit config first)
 Set `"max_pages": 20` in the config file to test with fewer pages.
+
+## Multi-Platform Support (v2.5.0+)
+
+**4 Platforms Fully Supported:**
+- **Claude AI** (default) - ZIP format, Skills API, MCP integration
+- **Google Gemini** - tar.gz format, Files API, 1M token context
+- **OpenAI ChatGPT** - ZIP format, Assistants API, Vector Store
+- **Generic Markdown** - ZIP format, universal compatibility
+
+**All skill modes work with all platforms:**
+- Documentation scraping
+- GitHub repository analysis
+- PDF extraction
+- Unified multi-source
+- Local repository analysis
+
+**Use the `--target` parameter for packaging, upload, and enhancement:**
+```bash
+# Package for different platforms
+skill-seekers package output/react/ --target claude     # Default
+skill-seekers package output/react/ --target gemini
+skill-seekers package output/react/ --target openai
+skill-seekers package output/react/ --target markdown
+
+# Upload to platforms (requires API keys)
+skill-seekers upload output/react.zip --target claude
+skill-seekers upload output/react-gemini.tar.gz --target gemini
+skill-seekers upload output/react-openai.zip --target openai
+
+# Enhance with platform-specific AI
+skill-seekers enhance output/react/ --target claude     # Sonnet 4
+skill-seekers enhance output/react/ --target gemini --mode api    # Gemini 2.0
+skill-seekers enhance output/react/ --target openai --mode api    # GPT-4o
+```
+
+See [Multi-Platform Guide](UPLOAD_GUIDE.md) and [Feature Matrix](FEATURE_MATRIX.md) for complete details.
 
 ## Architecture
 
@@ -325,6 +461,40 @@ print(soup.select_one('article'))
 print(soup.select_one('main'))
 print(soup.select_one('div[role="main"]'))
 ```
+
+## Running Tests
+
+**IMPORTANT: You must install the package before running tests**
+
+```bash
+# 1. Install package in editable mode (one-time setup)
+pip install -e .
+
+# 2. Run all tests
+pytest
+
+# 3. Run specific test files
+pytest tests/test_config_validation.py
+pytest tests/test_github_scraper.py
+
+# 4. Run with verbose output
+pytest -v
+
+# 5. Run with coverage report
+pytest --cov=src/skill_seekers --cov-report=html
+```
+
+**Why install first?**
+- Tests import from `skill_seekers.cli` which requires the package to be installed
+- Modern Python packaging best practice (PEP 517/518)
+- CI/CD automatically installs with `pip install -e .`
+- conftest.py will show helpful error if package not installed
+
+**Test Coverage:**
+- 391+ tests passing
+- 39% code coverage
+- All core features tested
+- CI/CD tests on Ubuntu + macOS with Python 3.10-3.12
 
 ## Troubleshooting
 

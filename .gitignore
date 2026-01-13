@@ -29,6 +29,9 @@ env/
 output/
 *.zip
 
+# Skill Seekers cache (intermediate files)
+.skillseeker-cache/
+
 # IDE
 .vscode/
 .idea/
@@ -55,3 +58,8 @@ htmlcov/
 
 # Build artifacts
 .build/
+skill-seekers-configs/
+.claude/skills
+.mcp.json
+settings.json
+USER_GUIDE.md
